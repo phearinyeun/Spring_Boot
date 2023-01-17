@@ -3,6 +3,10 @@ package Spring.Boot.Spring.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.aspectj.apache.bcel.generic.Tag;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -23,4 +27,15 @@ public class User {
     private String description;
     @Column(name = "isPublished")
     private boolean isPublished;
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "user_tags",
+            joinColumns = { @JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id")})
+    private Set<Tag> tags = new HashSet<>();
+
 }
